@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan Marathon</title>
+<meta name="description" content="Plan d'entraînement marathon — 14 semaines">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#10203a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Marathon">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  color-scheme:light;
+  --surface-0:#f6f6f4; --surface-1:#fcfcfb; --surface-2:#eeeeeb;
+  --line:#dededa; --line-strong:#c9c9c3;
+  --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#83827c;
+  --series-1:#2a78d6; --accent:#eb6834; --ok:#1baf7a;
+  --c-ef:#7a8b9e; --c-vma:#eb6834; --c-seuil:#2a78d6; --c-am:#1baf7a;
+  --c-sl:#4a3aa7; --c-course:#e34948; --c-repos:#a3a29c; --c-renfo:#8a6d3b;
+}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme=light])){
+  color-scheme:dark;
+  --surface-0:#121211; --surface-1:#1a1a19; --surface-2:#232322;
+  --line:#333331; --line-strong:#4a4a47;
+  --ink:#fff; --ink-2:#c3c2b7; --ink-3:#8d8c84;
+  --series-1:#3987e5; --accent:#d95926; --ok:#199e70;
+  --c-ef:#8fa2b6; --c-vma:#d95926; --c-seuil:#3987e5; --c-am:#199e70;
+  --c-sl:#9085e9; --c-course:#e66767; --c-repos:#8d8c84; --c-renfo:#b08d4f;
+}}
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --surface-0:#121211; --surface-1:#1a1a19; --surface-2:#232322;
+  --line:#333331; --line-strong:#4a4a47;
+  --ink:#fff; --ink-2:#c3c2b7; --ink-3:#8d8c84;
+  --series-1:#3987e5; --accent:#d95926; --ok:#199e70;
+  --c-ef:#8fa2b6; --c-vma:#d95926; --c-seuil:#3987e5; --c-am:#199e70;
+  --c-sl:#9085e9; --c-course:#e66767; --c-repos:#8d8c84; --c-renfo:#b08d4f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--ink);
+ font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ -webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;
+ padding:calc(28px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(80px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left))}
+.today{background:var(--surface-1);border:1px solid var(--line);border-left:3px solid var(--series-1);
+ border-radius:12px;padding:16px 18px;margin:18px 0 4px}
+.today .lab{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.today .h{font-size:19px;font-weight:650;letter-spacing:-.01em;margin:5px 0 4px}
+.today .d{color:var(--ink-2);font-size:14px}
+.today .row{display:flex;align-items:flex-start;gap:12px;margin-top:10px}
+.today .cb{width:20px;height:20px;margin-top:2px}
+.saved{font-size:12px;color:var(--ink-3);margin-top:8px}
+h1{font-size:26px;line-height:1.2;margin:0 0 4px;letter-spacing:-.02em}
+h2{font-size:15px;margin:34px 0 12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.sub{color:var(--ink-2);margin:0 0 20px;font-size:14px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer}
+.tbtn{background:var(--surface-1);border:1px solid var(--line);color:var(--ink-2);
+ border-radius:999px;padding:6px 13px;font-size:13px}
+.tbtn:hover{border-color:var(--line-strong);color:var(--ink)}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0 6px}
+.tile{background:var(--surface-1);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .lab{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.tile .val{font-size:27px;font-weight:650;letter-spacing:-.02em;margin-top:3px;font-variant-numeric:tabular-nums}
+.tile .val small{font-size:14px;font-weight:500;color:var(--ink-2);letter-spacing:0}
+
+.card{background:var(--surface-1);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.note{border-left:3px solid var(--accent);background:var(--surface-1);border-radius:0 10px 10px 0;
+ padding:14px 18px;margin:16px 0;color:var(--ink-2);font-size:14px}
+.note b{color:var(--ink)}
+.note p{margin:0 0 8px} .note p:last-child{margin:0}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.wk{background:var(--surface-1);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.wk.now{border-color:var(--series-1);box-shadow:0 0 0 1px var(--series-1)}
+.wkh{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;user-select:none;width:100%;
+ background:none;border:none;color:inherit;text-align:left}
+.wkh:hover{background:var(--surface-2)}
+.chev{color:var(--ink-3);transition:transform .15s;flex:none}
+.wk.open .chev{transform:rotate(90deg)}
+.wkn{font-weight:650;font-size:15px;min-width:34px;flex:none}
+.wkd{color:var(--ink-2);font-size:13px;flex:none;min-width:96px}
+.wkt{color:var(--ink-2);font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkkm{font-variant-numeric:tabular-nums;font-weight:600;font-size:13.5px;flex:none}
+.ph{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line-strong);
+ color:var(--ink-2);flex:none;white-space:nowrap}
+.wkb{display:none;border-top:1px solid var(--line);padding:4px 0 8px}
+.wk.open .wkb{display:block}
+.wknote{padding:12px 16px 6px;color:var(--ink-2);font-size:13.5px}
+
+.sess{display:flex;gap:12px;padding:11px 16px;border-top:1px solid var(--line);align-items:flex-start}
+.sess:first-child{border-top:none}
+.sess.done .stitle,.sess.done .sdet{opacity:.45;text-decoration:line-through;text-decoration-thickness:1px}
+.cb{flex:none;margin-top:2px;width:17px;height:17px;accent-color:var(--series-1);cursor:pointer}
+.sday{flex:none;width:80px;font-size:13px;color:var(--ink-2);padding-top:1px}
+.sbody{flex:1;min-width:0}
+.stitle{font-weight:560;font-size:14.5px}
+.sdet{color:var(--ink-2);font-size:13px;margin-top:2px}
+.skm{flex:none;font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink-2);padding-top:1px}
+.tag{display:inline-block;font-size:10.5px;font-weight:650;letter-spacing:.04em;padding:1px 6px;
+ border-radius:5px;margin-right:7px;vertical-align:1px;color:#fff}
+.t-EF{background:var(--c-ef)}.t-VMA{background:var(--c-vma)}.t-SEUIL{background:var(--c-seuil)}
+.t-AM{background:var(--c-am)}.t-SL{background:var(--c-sl)}.t-COURSE{background:var(--c-course)}
+.t-REPOS{background:var(--c-repos)}.t-RENFO{background:var(--c-renfo)}
+.shoe{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line-strong);
+ color:var(--ink-2);margin-left:7px;white-space:nowrap;vertical-align:1px}
+.shoe.race{border-color:var(--c-course);color:var(--c-course)}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.lg{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2)}
+.sw{width:10px;height:10px;border-radius:3px;flex:none}
+
+#chart svg{display:block;width:100%;height:auto}
+.chev{width:10px;height:10px}
+.gl{stroke:var(--line);stroke-width:1}
+.axt{fill:var(--ink-3);font-size:11px}
+.bl{fill:var(--ink);font-size:11px;font-weight:650}
+.bar{transition:opacity .12s}
+.barg:hover .bar{opacity:.75}
+#tip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--line-strong);
+ border-radius:8px;padding:7px 10px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.14);opacity:0;
+ transition:opacity .1s;z-index:9;white-space:nowrap;color:var(--ink)}
+.prog{height:7px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin-top:10px}
+.prog i{display:block;height:100%;background:var(--series-1);border-radius:4px;width:0;transition:width .2s}
+details.tbl{margin-top:12px}
+details.tbl summary{cursor:pointer;font-size:12.5px;color:var(--ink-3)}
+.foot{margin-top:34px;color:var(--ink-3);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+@media(max-width:620px){.sday{width:100%;order:-1;font-weight:600;color:var(--ink)}
+ .tile .val{font-size:21px}.tiles{grid-template-columns:1fr 1fr;gap:8px}.tile{padding:11px 13px}
+ .card table,.card tbody,.card tr,.card td{display:block;width:100%}
+ .card thead{display:none}
+ .card tr{border-bottom:1px solid var(--line);padding:11px 0}
+ .card tr:last-child{border-bottom:none;padding-bottom:0}
+ .card tr:first-child{padding-top:0}
+ .card td{border:none;padding:1px 0}
+ .card td:first-child{font-weight:600;font-size:14.5px}
+ .card td.num{color:var(--ink-2)}
+ .sess{flex-wrap:wrap}.wkd{display:none}.wkt{display:none}}
+</style></head><body>
+<div class="wrap">
+
+<div class="topbar">
+ <div>
+  <h1>Plan Marathon</h1>
+  <p class="sub">14 semaines · 5–6 séances de course + 1 renfo · jour J le 29 novembre</p>
+ </div>
+ <button class="tbtn" id="theme">Thème</button>
+</div>
+
+<div class="today" id="today"></div>
+
+<div class="tiles">
+ <div class="tile"><div class="lab">Jours restants</div><div class="val" id="jrs">—</div></div>
+ <div class="tile"><div class="lab">Semaine en cours</div><div class="val" id="wnow">—</div></div>
+ <div class="tile"><div class="lab">Volume total</div><div class="val" id="tot">—<small> km</small></div></div>
+ <div class="tile"><div class="lab">Pic hebdo</div><div class="val" id="pk">—<small> km</small></div></div>
+</div>
+
+<div class="note">
+ <p><b>Objectif.</b> Cible <b>3h05–3h15</b>, sub-3h en objectif d'étirement. Le volume passe de 36 à <b>81 km au pic</b> (semaine 11), puis trois semaines d'affûtage.</p>
+ <p><b>Point de bascule : le semi-test de la semaine 8.</b> ≤ 1h25 → objectif 3h00. 1h25–1h30 → 3h05–3h10. > 1h30 → 3h15. L'allure marathon se fixe à ce moment-là, pas avant.</p>
+</div>
+
+<h2>Charge hebdomadaire</h2>
+<div class="card">
+ <div id="chart"></div>
+ <div class="legend" style="margin-top:10px">
+  <span class="lg"><i class="sw" style="background:var(--series-1)"></i>Volume d'entraînement</span>
+  <span class="lg"><i class="sw" style="background:var(--c-course)"></i>Course (semi-test / marathon)</span>
+ </div>
+ <details class="tbl"><summary>Voir en tableau</summary>
+  <table><thead><tr><th>Sem.</th><th>Dates</th><th>Phase</th><th>Volume</th></tr></thead><tbody id="vt"></tbody></table>
+ </details>
+</div>
+
+<h2>Allures de référence</h2>
+<div class="card">
+<table>
+<thead><tr><th>Zone</th><th>Allure</th><th>FC <span style="font-weight:400;text-transform:none;letter-spacing:0">(quand tu auras la montre)</span></th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td><span class="tag t-EF">EF</span>Endurance fondamentale</td><td class="num">5:30–5:50</td><td class="num">130–145</td><td>~70 % du volume. Doit être ennuyeux.</td></tr>
+<tr><td>Endurance active</td><td class="num">5:00–5:15</td><td class="num">148–155</td><td>Fin de sortie longue, footings toniques.</td></tr>
+<tr><td><span class="tag t-AM">AM</span>Allure marathon</td><td class="num">4:15 <span style="color:var(--ink-3)">(3h00)</span><br>4:24 <span style="color:var(--ink-3)">(3h05)</span><br>4:38 <span style="color:var(--ink-3)">(3h15)</span></td><td class="num">158–166</td><td>Allure course. Se fixe après le semi-test.</td></tr>
+<tr><td><span class="tag t-SEUIL">SEUIL</span>Seuil / allure semi</td><td class="num">4:00–4:08</td><td class="num">168–175</td><td>Le meilleur prédicteur de perf marathon.</td></tr>
+<tr><td>Allure 10 km</td><td class="num">3:45–3:55</td><td class="num">175–180</td><td>Intervalles longs.</td></tr>
+<tr><td><span class="tag t-RENFO">RENFO</span>Renforcement</td><td class="num">—</td><td class="num">—</td><td>1×/sem le lundi + gainage sur un footing récup. Non négociable avec cette montée de volume.</td></tr>
+<tr><td><span class="tag t-VMA">VMA</span>VMA courte</td><td class="num">3:25–3:40</td><td class="num">—</td><td>30 s à 3 min. Entretien de la foulée.</td></tr>
+</tbody></table>
+</div>
+
+<h2>Rotation des chaussures</h2>
+<div class="card">
+ <table>
+ <thead><tr><th>Paire</th><th>Rôle dans le plan</th><th>Km du plan</th><th>Part du plan</th></tr></thead>
+ <tbody>
+ <tr><td><b>Trainer</b><br><span style="color:var(--ink-3);font-size:12.5px">amorti, sans plaque</span></td><td>Endurance fondamentale et sorties longues. Le cheval de trait : 58 % du plan.</td><td class="num">454 km</td><td class="num">58 %</td></tr>
+ <tr><td><b>Tempo</b><br><span style="color:var(--ink-3);font-size:12.5px">plaque nylon</span></td><td>VMA, seuil et intervalles. Prévoir une paire fraîche à partir de la semaine 5.</td><td class="num">208 km</td><td class="num">26 %</td></tr>
+ <tr><td><b>Course</b><br><span style="color:var(--ink-3);font-size:12.5px">plaque carbone</span></td><td>Allure marathon en affûtage, répétition générale (S10), semi-test, jour J. Rien d'autre.</td><td class="num">125 km</td><td class="num">16 %</td></tr>
+ </tbody></table>
+ <p style="margin:14px 0 0;color:var(--ink-2);font-size:14px"><b>Règle simple :</b> la plaque carbone ne sort que quand ça compte. Faire les 13 séances de VMA en Pro 4 sur une montée de volume, c'est la voie royale vers une tendinite d'Achille — et ça use la chaussure qu'on veut fraîche le jour J.</p>
+</div>
+
+<h2>Piloter sans montre</h2>
+<div class="card">
+ <p style="margin:0 0 12px;color:var(--ink-2);font-size:14px">Tant que tu n'as pas de cardio, <b>la FC ne pilote rien</b> : tu pilotes à l'allure (GPS du téléphone) et surtout au <b>test de la parole</b>, qui est plus fiable qu'un cardio poignet de toute façon. Le test de la parole ne se triche pas.</p>
+ <table>
+ <thead><tr><th>Zone</th><th>Allure</th><th>RPE</th><th>Test de la parole</th></tr></thead>
+ <tbody>
+ <tr><td><span class="tag t-EF">EF</span>Endurance fondamentale</td><td class="num">5:30–5:50</td><td class="num">3–4/10</td><td>Conversation complète, phrases entières, respiration nasale possible. <b>Si tu ne peux pas, tu vas trop vite.</b></td></tr>
+ <tr><td>Endurance active</td><td class="num">5:00–5:15</td><td class="num">5/10</td><td>Phrases courtes.</td></tr>
+ <tr><td><span class="tag t-AM">AM</span>Allure marathon</td><td class="num">4:15–4:38</td><td class="num">6–7/10</td><td>5 à 8 mots d'affilée. Respiration rythmée mais régulière, jamais saccadée.</td></tr>
+ <tr><td><span class="tag t-SEUIL">SEUIL</span>Seuil</td><td class="num">4:00–4:08</td><td class="num">8/10</td><td>2–3 mots maximum. « Confortablement dur ».</td></tr>
+ <tr><td>Allure 10 km</td><td class="num">3:45–3:55</td><td class="num">9/10</td><td>Un mot.</td></tr>
+ <tr><td><span class="tag t-VMA">VMA</span>VMA</td><td class="num">3:25–3:40</td><td class="num">10/10</td><td>Rien.</td></tr>
+ </tbody></table>
+ <p style="margin:14px 0 0;color:var(--ink-2);font-size:14px"><b>À noter après chaque séance</b> — une ligne suffit :<br>
+ <code style="display:inline-block;margin-top:6px;background:var(--surface-2);padding:7px 10px;border-radius:7px;font-size:13px">date · séance du plan · km · temps · RPE /10 · une phrase de ressenti</code><br>
+ <span style="font-size:13.5px">Ex. : <i>26/08 · VMA 6×1' · 7,2 km · 41'10 · RPE 7 · jambes lourdes au 3e, allure tenue.</i></span></p>
+ <p style="margin:12px 0 0;color:var(--ink-2);font-size:14px">Pour la distance et l'allure sans montre : une application de course GPS sur téléphone donne km, temps et splits au kilomètre. C'est 90 % de ce qui compte. Le reste — FC, cadence, oscillation — attendra la montre.</p>
+</div>
+
+<h2>Le plan, semaine par semaine</h2>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+ <button class="tbtn" id="exp">Tout déplier</button>
+ <button class="tbtn" id="col">Tout replier</button>
+ <button class="tbtn" id="exportbtn">Exporter mon suivi</button>
+</div>
+<div class="card" style="padding:14px 18px;margin-bottom:14px">
+ <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--ink-2)">Séances cochées</span><span id="pt" style="font-variant-numeric:tabular-nums;font-weight:600">0 / 0</span></div>
+ <div class="prog"><i id="pb"></i></div>
+</div>
+<div id="weeks"></div>
+
+<div class="foot">
+ <b>Règles qui priment sur le plan.</b> Une douleur qui modifie ta foulée = arrêt, pas d'adaptation.
+ Deux séances ratées dans une semaine : ne rattrape pas, reprends au calendrier.
+ FC de repos +7 bpm sur deux matins = semaine allégée de 30 %.
+ Les séances de qualité peuvent glisser d'un jour, jamais s'empiler.<br><br>
+ <span style="color:var(--ink-3)">Tes séances cochées sont enregistrées sur cet appareil. Le suivi détaillé et les bilans se font ailleurs, pas dans cette page.</span>
+</div>
+</div>
+<div id="tip"></div>
+
+<script>
+const PLAN = [{"n": 1, "phase": "Fondation", "note": "Réhabituation. 4 séances seulement : c'est la fréquence, pas le volume, qui casse en reprise.", "start": "2026-08-24", "end": "2026-08-30", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit A (30')", "detail": "Sans course, à faire le matin ou à distance des séances. 3 tours : 12 squats poids de corps · 10 fentes/jambe · 12 montées de banc/jambe · 30″ gainage ventral + 25″/côté latéral · 15 ponts fessiers · 20 mollets sur marche. Récup 2' entre tours. Exécution parfaite avant charge.", "km": 0}, {"j": "Mardi", "t": "EF", "titre": "Footing 45' + 6 lignes droites", "detail": "EF 5:30–5:50/km, FC 130–145. Les LD sur 80 m en accélération progressive, récup marchée.", "km": 8, "shoe": "Trainer"}, {"j": "Mercredi", "t": "REPOS", "titre": "Repos", "detail": "Repos ou 30' vélo/natation + 15' gainage", "km": 0}, {"j": "Jeudi", "t": "VMA", "titre": "6×1' vite (r 1'30 trot)", "detail": "15' échauffement / 6×1' à 3:35/km, récup 1'30 en trot / 10' retour au calme. Objectif : réveiller la foulée, pas se vider.", "km": 7, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 35'", "detail": "EF strict 5:30–5:50/km. Si les jambes sont lourdes, ralentis, ne saute pas.", "km": 6, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 25' très souple", "detail": "Séance de circulation. 5:50/km, aucune intensité.", "km": 4, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "Sortie longue 1h00", "detail": "Allure régulière 5:30/km, FC < 148. Aucune accélération.", "km": 11, "shoe": "Trainer"}], "km": 36}, {"n": 2, "phase": "Fondation", "note": "On passe à 5 séances. Première séance au seuil.", "start": "2026-08-31", "end": "2026-09-06", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit A (30')", "detail": "Sans course, à faire le matin ou à distance des séances. 3 tours : 12 squats poids de corps · 10 fentes/jambe · 12 montées de banc/jambe · 30″ gainage ventral + 25″/côté latéral · 15 ponts fessiers · 20 mollets sur marche. Récup 2' entre tours. Exécution parfaite avant charge.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "8×45\" (r 1'15)", "detail": "15' éch / 8×45\" à 3:30/km, r 1'15 trot / 10' RAC.", "km": 7, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 40'", "detail": "EF 5:30–5:50/km.", "km": 7, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "2×8' au seuil (r 3')", "detail": "15' éch / 2×8' à 4:05/km, r 3' trot / 10' RAC. Le seuil doit rester « soutenu mais contrôlé » : tu peux dire 3 mots, pas une phrase.", "km": 8, "shoe": "Tempo"}, {"j": "Vendredi", "t": "REPOS", "titre": "Repos", "detail": "Repos complet ou 20' de gainage / mobilité", "km": 0}, {"j": "Samedi", "t": "EF", "titre": "Footing 30' + gainage", "detail": "Très souple, 5:45/km. + 15' gainage.", "km": 5, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "Sortie longue 1h00", "detail": "EF régulier, dernier quart légèrement plus tonique (5:15/km).", "km": 11, "shoe": "Trainer"}], "km": 38}, {"n": 3, "phase": "Fondation", "note": "Passage à 6 séances de course — le format définitif jusqu'à l'affûtage.", "start": "2026-09-07", "end": "2026-09-13", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit A (30')", "detail": "Sans course, à faire le matin ou à distance des séances. 3 tours : 12 squats poids de corps · 10 fentes/jambe · 12 montées de banc/jambe · 30″ gainage ventral + 25″/côté latéral · 15 ponts fessiers · 20 mollets sur marche. Récup 2' entre tours. Exécution parfaite avant charge.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "10×45\" (r 1'15)", "detail": "15' éch / 10×45\" à 3:30/km / 10' RAC.", "km": 7, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 40'", "detail": "EF 5:30/km.", "km": 7, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "3×8' au seuil (r 2'30)", "detail": "15' éch / 3×8' à 4:03/km, r 2'30 / 10' RAC.", "km": 9, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 25' récup", "detail": "Très lent, 5:50–6:00/km. Séance de circulation, rien d'autre.", "km": 4, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 30' + 6 LD", "detail": "EF + lignes droites.", "km": 5, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "Sortie longue 1h10", "detail": "EF, dont 15' à allure marathon sur la fin.", "km": 12, "shoe": "Trainer"}], "km": 44}, {"n": 4, "phase": "Assimilation", "note": "Semaine allégée (-20%). Elle n'est pas optionnelle : c'est là que les 3 semaines précédentes se transforment en forme.", "start": "2026-09-14", "end": "2026-09-20", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit A (30')", "detail": "Sans course, à faire le matin ou à distance des séances. 3 tours : 12 squats poids de corps · 10 fentes/jambe · 12 montées de banc/jambe · 30″ gainage ventral + 25″/côté latéral · 15 ponts fessiers · 20 mollets sur marche. Récup 2' entre tours. Exécution parfaite avant charge.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "8×30\" en côte", "detail": "15' éch / 8×30\" en côte à 5-6% (effort dur, foulée courte), récup descente en marchant / 10' RAC. Renforce sans impact traumatisant.", "km": 7, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 40'", "detail": "EF 5:30/km.", "km": 7, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "20' continu au seuil", "detail": "15' éch / 20' à 4:05/km d'un bloc / 10' RAC.", "km": 8, "shoe": "Tempo"}, {"j": "Vendredi", "t": "REPOS", "titre": "Repos", "detail": "Repos complet ou 20' de gainage / mobilité", "km": 0}, {"j": "Samedi", "t": "EF", "titre": "Footing 30'", "detail": "EF souple.", "km": 5, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "Sortie longue allégée 50'", "detail": "EF strict. Résiste à l'envie d'allonger.", "km": 9, "shoe": "Trainer"}], "km": 36}, {"n": 5, "phase": "Développement", "note": "Début du gros travail. Les sorties longues intègrent l'allure marathon.", "start": "2026-09-21", "end": "2026-09-27", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit B (40', chargé)", "detail": "Sans course. 4×8 goblet squat (RPE 7) · 4×8 fentes bulgares/jambe · 3×10 soulevé de terre jambes tendues · 3×12 mollets unipodaux chargés · gainage 3×45″ ventral + 3×30″/côté. Le renfo lourd protège des blessures et améliore l'économie de course — c'est ta meilleure assurance vu la montée de volume.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "6×2' (r 1'30)", "detail": "15' éch / 6×2' à 3:40/km / 10' RAC.", "km": 9, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 45'", "detail": "EF 5:30/km.", "km": 8, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "2×12' au seuil (r 3')", "detail": "15' éch / 2×12' à 4:03/km / 10' RAC.", "km": 10, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 30' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 5, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 35' + 6 LD", "detail": "EF.", "km": 6, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "1h15 dont 20' à AM", "detail": "EF puis 20' à allure marathon en fin de sortie, sans forcer la fin.", "km": 14, "shoe": "Trainer"}], "km": 52}, {"n": 6, "phase": "Développement", "note": "Première grosse semaine. Surveille le sommeil et l'appétit.", "start": "2026-09-28", "end": "2026-10-04", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit B (40', chargé)", "detail": "Sans course. 4×8 goblet squat (RPE 7) · 4×8 fentes bulgares/jambe · 3×10 soulevé de terre jambes tendues · 3×12 mollets unipodaux chargés · gainage 3×45″ ventral + 3×30″/côté. Le renfo lourd protège des blessures et améliore l'économie de course — c'est ta meilleure assurance vu la montée de volume.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "8×2' (r 1'30)", "detail": "15' éch / 8×2' à 3:40/km / 10' RAC.", "km": 9, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 55'", "detail": "EF 5:30/km.", "km": 10, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "3×10' au seuil (r 2'30)", "detail": "15' éch / 3×10' à 4:00/km / 12' RAC.", "km": 11, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 35' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 6, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 40'", "detail": "EF.", "km": 7, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "1h25 dont 2×15' à AM", "detail": "r 5' en EF entre les deux blocs.", "km": 16, "shoe": "Trainer"}], "km": 59}, {"n": 7, "phase": "Développement", "note": "Pic du bloc 2. Séance de seuil longue : c'est le marqueur clé pour le marathon.", "start": "2026-10-05", "end": "2026-10-11", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit B (40', chargé)", "detail": "Sans course. 4×8 goblet squat (RPE 7) · 4×8 fentes bulgares/jambe · 3×10 soulevé de terre jambes tendues · 3×12 mollets unipodaux chargés · gainage 3×45″ ventral + 3×30″/côté. Le renfo lourd protège des blessures et améliore l'économie de course — c'est ta meilleure assurance vu la montée de volume.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "10×400 m (r 1'10)", "detail": "15' éch / 10×400 m à 3:25/km / 10' RAC. Sur piste ou plat.", "km": 10, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 60'", "detail": "EF 5:30/km.", "km": 11, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "25' + 10' au seuil (r 3')", "detail": "15' éch / 25' à 4:00/km, r 3', 10' à 4:00/km / 10' RAC.", "km": 12, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 35' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 6, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 45' + 6 LD", "detail": "EF.", "km": 8, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "1h45 dont 25' à AM", "detail": "Les 25' à AM se placent entre la 60e et la 85e minute.", "km": 19, "shoe": "Trainer"}], "km": 66}, {"n": 8, "phase": "Test", "note": "⚑ SEMAINE DÉCISIVE. Allégée jusqu'au dimanche, puis semi-marathon chrono. Le résultat fixe l'objectif final.", "start": "2026-10-12", "end": "2026-10-18", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit A (30')", "detail": "Sans course, à faire le matin ou à distance des séances. 3 tours : 12 squats poids de corps · 10 fentes/jambe · 12 montées de banc/jambe · 30″ gainage ventral + 25″/côté latéral · 15 ponts fessiers · 20 mollets sur marche. Récup 2' entre tours. Exécution parfaite avant charge.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "6×1' (r 1'30)", "detail": "15' éch / 6×1' à 3:30/km / 10' RAC. Entretien, pas de fatigue.", "km": 7, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 45'", "detail": "EF.", "km": 8, "shoe": "Trainer"}, {"j": "Jeudi", "t": "EF", "titre": "Footing 40' + 6 LD", "detail": "EF + lignes droites.", "km": 7, "shoe": "Trainer"}, {"j": "Vendredi", "t": "REPOS", "titre": "Repos", "detail": "Repos complet — jambes fraîches pour dimanche", "km": 0}, {"j": "Samedi", "t": "EF", "titre": "Déblocage 25' + 4 LD", "detail": "Très souple + 4 accélérations de 20\".", "km": 4, "shoe": "Trainer"}, {"j": "Dimanche", "t": "COURSE", "titre": "🏁 TEST : semi-marathon chrono", "detail": "Semi ou 15 km à fond, en négative split. 3 km d'échauffement, 2 km de RAC. → ≤ 1h25 : objectif 3h00 validé. 1h25–1h30 : viser 3h05–3h10. > 1h30 : caler sur 3h15.", "km": 26, "shoe": "Course"}], "km": 52}, {"n": 9, "phase": "Spécifique", "note": "Bloc spécifique marathon : l'allure course devient la séance principale.", "start": "2026-10-19", "end": "2026-10-25", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit B (40', chargé)", "detail": "Sans course. 4×8 goblet squat (RPE 7) · 4×8 fentes bulgares/jambe · 3×10 soulevé de terre jambes tendues · 3×12 mollets unipodaux chargés · gainage 3×45″ ventral + 3×30″/côté. Le renfo lourd protège des blessures et améliore l'économie de course — c'est ta meilleure assurance vu la montée de volume.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "8×2' (r 1'30)", "detail": "15' éch / 8×2' à 3:40/km / 10' RAC.", "km": 10, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 60'", "detail": "EF.", "km": 11, "shoe": "Trainer"}, {"j": "Jeudi", "t": "AM", "titre": "3×3 km à allure marathon (r 3')", "detail": "15' éch / 3×3 km à AM / 10' RAC. Chaussures de course conseillées.", "km": 14, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 40' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 7, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 45'", "detail": "EF.", "km": 8, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "2h00 dont 3×20' à AM", "detail": "r 5' EF entre les blocs. Teste ta stratégie de ravitaillement : 1 gel toutes les 40'.", "km": 22, "shoe": "Trainer"}], "km": 72}, {"n": 10, "phase": "Spécifique", "note": "Volume élevé et sortie longue avec une heure à allure course.", "start": "2026-10-26", "end": "2026-11-01", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit B (40', chargé)", "detail": "Sans course. 4×8 goblet squat (RPE 7) · 4×8 fentes bulgares/jambe · 3×10 soulevé de terre jambes tendues · 3×12 mollets unipodaux chargés · gainage 3×45″ ventral + 3×30″/côté. Le renfo lourd protège des blessures et améliore l'économie de course — c'est ta meilleure assurance vu la montée de volume.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "12×400 m (r 1'10)", "detail": "15' éch / 12×400 m à 3:25/km / 10' RAC.", "km": 11, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 60'", "detail": "EF.", "km": 11, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "2×20' au seuil (r 3')", "detail": "15' éch / 2×20' à 4:00/km / 10' RAC. Séance dure — la plus prédictive du plan avec la SL.", "km": 13, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 40' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 7, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 45' + 6 LD", "detail": "EF.", "km": 8, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "2h15 dont 60' à AM sur la 2e moitié", "detail": "Départ EF, puis 60' à allure marathon sur la seconde moitié. Répétition générale complète : chaussures de course, tenue et nutrition exactement comme le jour J.", "km": 25, "shoe": "Course"}], "km": 75}, {"n": 11, "phase": "Pic", "note": "⚑ Semaine la plus lourde du plan. La sortie longue de dimanche est LA séance de référence.", "start": "2026-11-02", "end": "2026-11-08", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit A (30')", "detail": "Sans course, à faire le matin ou à distance des séances. 3 tours : 12 squats poids de corps · 10 fentes/jambe · 12 montées de banc/jambe · 30″ gainage ventral + 25″/côté latéral · 15 ponts fessiers · 20 mollets sur marche. Récup 2' entre tours. Exécution parfaite avant charge.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "6×3' (r 2')", "detail": "15' éch / 6×3' à 3:45/km / 10' RAC.", "km": 11, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 60'", "detail": "EF.", "km": 11, "shoe": "Trainer"}, {"j": "Jeudi", "t": "AM", "titre": "3×3 km à AM (r 2'30)", "detail": "15' éch / 3×3 km à AM, récup raccourcie / 10' RAC.", "km": 14, "shoe": "Course"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 40' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 7, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 40'", "detail": "EF très souple, tu prépares dimanche.", "km": 7, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "🔺 30–32 km dont les 12 derniers à AM", "detail": "La sortie clé. Départ EF strict, puis 12 km à allure marathon en fin de parcours. Nutrition exactement comme le jour J.", "km": 31, "shoe": "Trainer"}], "km": 81}, {"n": 12, "phase": "Affûtage", "note": "Début de l'affûtage : le volume baisse, l'intensité reste. Tu vas te sentir bizarrement fatigué puis d'un coup très bien.", "start": "2026-11-09", "end": "2026-11-15", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — circuit B (40', chargé)", "detail": "Sans course. 4×8 goblet squat (RPE 7) · 4×8 fentes bulgares/jambe · 3×10 soulevé de terre jambes tendues · 3×12 mollets unipodaux chargés · gainage 3×45″ ventral + 3×30″/côté. Le renfo lourd protège des blessures et améliore l'économie de course — c'est ta meilleure assurance vu la montée de volume.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "8×1' (r 1'30)", "detail": "15' éch / 8×1' à 3:35/km / 10' RAC.", "km": 9, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 50'", "detail": "EF.", "km": 9, "shoe": "Trainer"}, {"j": "Jeudi", "t": "SEUIL", "titre": "2×15' au seuil (r 3')", "detail": "15' éch / 2×15' à 4:00/km / 10' RAC.", "km": 11, "shoe": "Tempo"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 35' récup", "detail": "5:50/km. + 20' de gainage/mobilité après le footing (renfo secondaire).", "km": 6, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Footing 40'", "detail": "EF.", "km": 7, "shoe": "Trainer"}, {"j": "Dimanche", "t": "SL", "titre": "1h50 dont 40' à AM", "detail": "Dernière sortie longue conséquente.", "km": 20, "shoe": "Trainer"}], "km": 62}, {"n": 13, "phase": "Affûtage", "note": "-45% de volume. Ne compense pas, ne rajoute rien.", "start": "2026-11-16", "end": "2026-11-22", "days": [{"j": "Lundi", "t": "RENFO", "titre": "Renfo — entretien (25')", "detail": "Sans course. 2 tours du circuit A sans charge. On entretient, on ne construit plus.", "km": 0}, {"j": "Mardi", "t": "VMA", "titre": "6×1' (r 1'30)", "detail": "15' éch / 6×1' à 3:35/km / 10' RAC.", "km": 8, "shoe": "Tempo"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 45'", "detail": "EF.", "km": 8, "shoe": "Trainer"}, {"j": "Jeudi", "t": "AM", "titre": "20' à allure marathon", "detail": "15' éch / 20' à AM d'un bloc / 10' RAC. Doit sembler facile — si ce n'est pas le cas, revois l'objectif à la baisse.", "km": 10, "shoe": "Course"}, {"j": "Vendredi", "t": "EF", "titre": "Footing 30'", "detail": "EF souple.", "km": 5, "shoe": "Trainer"}, {"j": "Samedi", "t": "REPOS", "titre": "Repos", "detail": "Repos complet ou 20' de gainage / mobilité", "km": 0}, {"j": "Dimanche", "t": "SL", "titre": "1h15 dont 15' à AM", "detail": "Dernière sortie longue.", "km": 14, "shoe": "Trainer"}], "km": 45}, {"n": 14, "phase": "Course", "note": "🏁 SEMAINE DU MARATHON. Sommeil et glucides priment sur tout entraînement.", "start": "2026-11-23", "end": "2026-11-29", "days": [{"j": "Lundi", "t": "EF", "titre": "Footing 40' souple", "detail": "EF, 5:40/km.", "km": 7, "shoe": "Trainer"}, {"j": "Mardi", "t": "AM", "titre": "5×1' à allure semi (r 2')", "detail": "15' éch / 5×1' à 4:00/km / 10' RAC. Réveil neuromusculaire, aucune fatigue.", "km": 8, "shoe": "Course"}, {"j": "Mercredi", "t": "EF", "titre": "Footing 30'", "detail": "EF. Début de la recharge glucidique (~8 g/kg/j à partir de jeudi).", "km": 5, "shoe": "Trainer"}, {"j": "Jeudi", "t": "REPOS", "titre": "Repos", "detail": "Repos complet. Recharge glucidique. Hydratation.", "km": 0}, {"j": "Vendredi", "t": "EF", "titre": "Footing 25' + 4 LD", "detail": "Très souple. Prépare ton sac et tes gels.", "km": 4, "shoe": "Trainer"}, {"j": "Samedi", "t": "EF", "titre": "Déblocage 20' + 3 LD", "detail": "Ou repos total si tu préfères. Repas du soir simple et connu.", "km": 3, "shoe": "Trainer"}, {"j": "Dimanche", "t": "COURSE", "titre": "🏁 JOUR J — MARATHON", "detail": "Départ prudent : les 5 premiers km 5 à 8 s/km PLUS LENTS que l'allure cible. Gel toutes les 35–40'. Le vrai marathon commence au 30e km.", "km": 42, "shoe": "Course"}], "km": 69}];
+const RACE = new Date(2026,10,29,9,0);
+const FR = {weekday:'short',day:'numeric',month:'short'};
+
+/* tiles */
+const today=new Date();
+document.getElementById('jrs').textContent=Math.max(0,Math.ceil((RACE-today)/864e5));
+const tot=PLAN.reduce((a,w)=>a+w.km,0), pk=Math.max(...PLAN.map(w=>w.km));
+document.getElementById('tot').innerHTML=tot+'<small> km</small>';
+document.getElementById('pk').innerHTML=pk+'<small> km</small>';
+let cur=0;
+PLAN.forEach(w=>{ if(today>=new Date(w.start+'T00:00:00')) cur=w.n; });
+document.getElementById('wnow').textContent = cur? ('S'+cur+' / 14') : 'S1 le 24/08';
+
+/* aujourd'hui */
+(function(){
+  const el=document.getElementById('today');
+  const t=new Date(); t.setHours(0,0,0,0);
+  let hit=null;
+  PLAN.forEach(w=>{const a=new Date(w.start+'T00:00:00');
+    w.days.forEach((d,j)=>{const dt=new Date(a.getTime()+j*864e5);
+      if(dt.getTime()===t.getTime()) hit={w,d,j};});});
+  const dl=t.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  if(!hit){
+    const first=new Date(PLAN[0].start+'T00:00:00');
+    const n=Math.ceil((first-t)/864e5);
+    el.innerHTML=`<div class="lab">${dl}</div><div class="h">${n>0?`Le plan démarre dans ${n} jour${n>1?'s':''}`:'Hors calendrier du plan'}</div>
+      <div class="d">${n>0?'Première séance lundi 24 août : renfo circuit A.':'Bravo — le plan est terminé.'}</div>`;
+    return;
+  }
+  const {w,d,j}=hit;
+  el.innerHTML=`<div class="lab">${dl} · semaine ${w.n}</div>
+   <div class="h"><span class="tag t-${d.t}">${d.t}</span>${d.titre}${d.shoe?`<span class="shoe${d.shoe==='Course'?' race':''}">👟 ${d.shoe}</span>`:''}</div>
+   <div class="d">${d.detail}</div>
+   ${d.t!=='REPOS'?`<div class="row"><input type="checkbox" class="cb" id="todaycb"><label for="todaycb" style="font-size:14px;color:var(--ink-2)">${d.km?d.km+' km — ':''}marquer comme fait</label></div>`:''}`;
+  window.__today={w:w.n,j};
+})();
+
+/* chart */
+(function(){
+  const P={l:34,r:12,t:18,b:34}, W=900,H=250, iw=W-P.l-P.r, ih=H-P.t-P.b;
+  const max=90, x=i=>P.l+i*(iw/PLAN.length), bw=iw/PLAN.length-6;
+  const y=v=>P.t+ih-(v/max)*ih;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Volume hebdomadaire de 36 à 81 km, pic en semaine 11, affûtage sur les 3 dernières semaines">`;
+  for(let v=0;v<=80;v+=20){ s+=`<line class="gl" x1="${P.l}" y1="${y(v)}" x2="${W-P.r}" y2="${y(v)}"/>`;
+    s+=`<text class="axt" x="${P.l-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`; }
+  PLAN.forEach((w,i)=>{
+    const isRace=(w.n===14||w.n===8), c=isRace?'var(--c-course)':'var(--series-1)';
+    const h=Math.max(3,P.t+ih-y(w.km));
+    s+=`<g class="barg" data-i="${i}"><rect class="bar" x="${x(i)}" y="${y(w.km)}" width="${bw}" height="${h}" rx="4" fill="${c}"/>`;
+    s+=`<rect x="${x(i)-3}" y="${P.t}" width="${bw+6}" height="${ih}" fill="transparent"/></g>`;
+    s+=`<text class="axt" x="${x(i)+bw/2}" y="${H-14}" text-anchor="middle">${w.n}</text>`;
+    if(w.n===11||w.n===14) s+=`<text class="bl" x="${x(i)+bw/2}" y="${y(w.km)-7}" text-anchor="middle">${w.km} km</text>`;
+  });
+  s+=`<line class="gl" x1="${P.l}" y1="${P.t+ih}" x2="${W-P.r}" y2="${P.t+ih}" stroke="var(--line-strong)"/>`;
+  s+='</svg>';
+  document.getElementById('chart').innerHTML=s;
+  const tip=document.getElementById('tip');
+  document.querySelectorAll('.barg').forEach(g=>{
+    g.addEventListener('mousemove',e=>{const w=PLAN[+g.dataset.i];
+      tip.innerHTML=`<b>S${w.n}</b> · ${w.phase}<br>${w.km} km · ${w.days.filter(d=>d.km>0).length} séances`;
+      tip.style.opacity=1; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY-10)+'px';});
+    g.addEventListener('mouseleave',()=>tip.style.opacity=0);
+  });
+  document.getElementById('vt').innerHTML=PLAN.map(w=>{
+    const a=new Date(w.start+'T00:00:00'), b=new Date(w.end+'T00:00:00');
+    return `<tr><td class="num">S${w.n}</td><td class="num">${a.toLocaleDateString('fr-FR',FR)} – ${b.toLocaleDateString('fr-FR',FR)}</td><td>${w.phase}</td><td class="num">${w.km} km</td></tr>`;
+  }).join('');
+})();
+
+/* weeks */
+const host=document.getElementById('weeks');
+host.innerHTML=PLAN.map(w=>{
+  const a=new Date(w.start+'T00:00:00'), b=new Date(w.end+'T00:00:00');
+  const now = w.n===cur ? ' now':'';
+  const rows=w.days.map((d,j)=>{
+    const dt=new Date(a.getTime()+j*864e5);
+    const day=dt.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'numeric'});
+    const cb = d.t!=='REPOS' ? `<input type="checkbox" class="cb" data-w="${w.n}" data-km="${d.km}">` : `<span style="width:17px;flex:none"></span>`;
+    return `<div class="sess">${cb}<div class="sday">${day}</div><div class="sbody">
+      <div class="stitle"><span class="tag t-${d.t}">${d.t}</span>${d.titre}${d.shoe?`<span class="shoe${d.shoe==='Course'?' race':''}">👟 ${d.shoe}</span>`:''}</div>
+      <div class="sdet">${d.detail}</div></div>
+      <div class="skm">${d.km>0?d.km+' km':''}</div></div>`;
+  }).join('');
+  return `<div class="wk${now}" id="w${w.n}">
+   <button class="wkh"><svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="wkn">S${w.n}</span>
+    <span class="wkd">${a.toLocaleDateString('fr-FR',FR)} – ${b.toLocaleDateString('fr-FR',FR)}</span>
+    <span class="ph">${w.phase}</span>
+    <span class="wkt">${w.note.replace(/<[^>]*>/g,'')}</span>
+    <span class="wkkm">${w.km} km</span></button>
+   <div class="wkb"><div class="wknote">${w.note}</div>${rows}</div></div>`;
+}).join('');
+
+document.querySelectorAll('.wkh').forEach(h=>h.addEventListener('click',()=>h.parentElement.classList.toggle('open')));
+document.getElementById('exp').onclick=()=>document.querySelectorAll('.wk').forEach(w=>w.classList.add('open'));
+document.getElementById('col').onclick=()=>document.querySelectorAll('.wk').forEach(w=>w.classList.remove('open'));
+if(cur) document.getElementById('w'+cur).classList.add('open'); else document.getElementById('w1').classList.add('open');
+
+const KEY='marathonLR.v1';
+const store={
+  read(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return this.mem||{}}},
+  write(o){this.mem=o;try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+};
+const boxes=[...document.querySelectorAll('#weeks .cb')];
+boxes.forEach((b,i)=>b.dataset.k='s'+i);
+let state=store.read();
+boxes.forEach(b=>{ if(state[b.dataset.k]){b.checked=true;b.closest('.sess').classList.add('done');} });
+
+const todayCb=document.getElementById('todaycb');
+function todayBox(){
+  if(!window.__today) return null;
+  const w=window.__today.w, j=window.__today.j;
+  const rows=[...document.querySelectorAll('#w'+w+' .sess')];
+  const r=rows[j]; return r? r.querySelector('.cb') : null;
+}
+function refresh(){
+  const d=boxes.filter(b=>b.checked);
+  document.getElementById('pt').textContent=`${d.length} / ${boxes.length}  ·  ${d.reduce((a,b)=>a+ +b.dataset.km,0)} km`;
+  document.getElementById('pb').style.width=(boxes.length? d.length/boxes.length*100:0)+'%';
+  const tb=todayBox(); if(todayCb&&tb) todayCb.checked=tb.checked;
+}
+function persist(){ const o={}; boxes.forEach(b=>{if(b.checked)o[b.dataset.k]=1}); store.write(o); }
+boxes.forEach(b=>b.addEventListener('change',()=>{
+  b.closest('.sess').classList.toggle('done',b.checked); persist(); refresh();
+}));
+if(todayCb) todayCb.addEventListener('change',()=>{
+  const tb=todayBox(); if(tb){ tb.checked=todayCb.checked; tb.dispatchEvent(new Event('change')); }
+});
+refresh();
+
+document.getElementById('exportbtn').onclick=()=>{
+  let out='Suivi entrainement\n';
+  PLAN.forEach(w=>{
+    const bs=boxes.filter(b=>+b.dataset.w===w.n), d=bs.filter(b=>b.checked);
+    if(d.length) out+=`S${w.n} : ${d.length}/${bs.length} séances, ${d.reduce((a,b)=>a+ +b.dataset.km,0)}/${w.km} km\n`;
+  });
+  navigator.clipboard.writeText(out).then(()=>{const e=document.getElementById('exportbtn');
+    e.textContent='Copié ✓';setTimeout(()=>e.textContent='Exporter mon suivi',1600);});
+};
+document.getElementById('theme').onclick=()=>{
+  const d=document.documentElement, isDark=getComputedStyle(d).getPropertyValue('--ink').trim()==='#fff';
+  d.setAttribute('data-theme', isDark?'light':'dark');
+};
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script></body></html>
